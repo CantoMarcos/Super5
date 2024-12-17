@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    container_name: api
+    environment:
+      - ENV_FILE_PATH=environments/.env.${SHORT_ENV}
+      - TZ=America/Manaus
+    command: bash -c "sleep 10 && alembic upgrade head && uvicorn src.api:app --host 0.0.0.0 --port 8000"
+    volumes:
+      - ./api:/api
+      - ./environments:/environments
+    ports:
+      - 8000:8000
+      - 8765:8756
+    restart: 'always'
+
+  comunicate_service:
+    build:
+      context: ./comunicate_service
+      dockerfile: ./Dockerfile
+    container_name: comunicate_service
+    environment:
+      - ENV_FILE_PATH=environments/.env.${SHORT_ENV}
+      - TZ=America/Manaus
+    command: bash -c "sleep 10 && python3 ./mqtt_save_api.py"
+    volumes:
+      - ./comunicate_service:/comunicate_service
+      - ./environments:/environments
+    ports:
+      - 8002:80
+    restart: 'always'

@@ -1,0 +1,11 @@
+{
+    "name": "svf",
+    "version": "1.0.0",
+    "scripts": {
+      "dev": "npm run down && docker compose --env-file environments/.env.dev up -d",
+      "prod": "npm run down && docker compose --env-file environments/.env.prod up -d",
+      "down": "docker compose down -v --remove-orphans --rmi all"
+    },
+    "license": "ISC"
+  }
+  
